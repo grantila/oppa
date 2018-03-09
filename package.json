@@ -1,0 +1,45 @@
+{
+  "name": "oppa",
+  "version": "0.0.1",
+  "description": "😌  Super easy typesafe options parser for Node.js",
+  "author": "Gustaf Räntilä",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grantila/oppa/issues"
+  },
+  "homepage": "https://github.com/grantila/oppa#readme",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "directories": {},
+  "scripts": {
+    "build": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/tsc -p .",
+    "mocha": "./node_modules/.bin/mocha --bail --check-leaks dist/test",
+    "test": "node_modules/.bin/nyc npm run mocha",
+    "buildtest": "npm run build && npm run test",
+    "buildtestcov": "npm run buildtest && npm run coverage",
+    "coverage": "node_modules/.bin/nyc report --reporter=html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grantila/oppa.git"
+  },
+  "keywords": [
+    "oppa",
+    "argument",
+    "option",
+    "parser",
+    "options",
+    "arguments"
+  ],
+  "devDependencies": {
+    "@types/chai": "4.x",
+    "@types/mocha": "2.x",
+    "@types/node": "9.x",
+    "chai": "4.x",
+    "coveralls": "3.x",
+    "mocha": "5.x",
+    "nyc": "11.x",
+    "rimraf": "2.x",
+    "typescript": "2.7.x"
+  }
+}
