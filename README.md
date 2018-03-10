@@ -197,9 +197,9 @@ For sub-commands (e.g. like `git`), arpa is designed not to support this as a si
 
     // Applies to the entire application, e.g. verbosity, debug
     const globalOptions = mainResult.args;
-    const subCommands = mainResult.rest;
+    const [ subCommand, ...subArgs ] = mainResult.rest;
 
-    switch ( subCommands ) // The first non-option argument
+    switch ( subCommand ) // The first non-option argument
     {
         case 'init': return runInit( );
         case 'push': return runPush( );
@@ -213,7 +213,7 @@ For sub-commands (e.g. like `git`), arpa is designed not to support this as a si
         const initOptions = arpa( )
             .add( /* ... */ )
             .add( /* ... */ )
-            .parse( subCommands );
+            .parse( subArgs );
 
         // ...
     }
