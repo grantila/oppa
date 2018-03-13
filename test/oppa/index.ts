@@ -419,7 +419,7 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', 'x' ] );
 
-		expect( parse ).to.throw( );
+		expect( parse ).to.throw( "Invalid numeric" );
 	} );
 
 	it( 'should handle single used number argument (overriding default)',

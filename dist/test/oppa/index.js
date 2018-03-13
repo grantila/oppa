@@ -327,7 +327,7 @@ describe('number', () => {
             alias: 'f',
         })
             .parse(['-f', 'x']);
-        chai_1.expect(parse).to.throw();
+        chai_1.expect(parse).to.throw("Invalid numeric");
     });
     it('should handle single used number argument (overriding default)', () => {
         const result = _1.oppa()

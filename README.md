@@ -112,9 +112,13 @@ The options to the `oppa( )` function are:
 ```
 
 `name`, `version` and `description` are used for the auto-generated `--help` and `--version` options.
+
 If `noHelp` is true, a `--help` will not be auto-generated.
-`allowUnknown` will cause oppa not to fail on unknown arguments, but simply keep them as booleans (in its own array of `{ name, value }` objects called `unknown`).
+
+`allowUnknown` will cause oppa not to fail on unknown arguments, but simply keep them as booleans or strings (in its own array of `{ name, value }` objects called `unknown`). `--foo` will add a boolean `foo` and set it to `true`. `--bar=baz` will set the name `bar` to the string `baz`.
+
 `throwOnError` will, instead of printing a help screen on invalid arguments, throw an error so that you can control the flow (sometimes useful in unit tests).
+
 `noExit` causes the program not to exit after having printed the help screen or version (sometimes useful in unit tests).
 
 
