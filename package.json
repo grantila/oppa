@@ -1,6 +1,6 @@
 {
   "name": "oppa",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "😌  Super easy typesafe options parser for Node.js",
   "author": "Gustaf Räntilä",
   "license": "MIT",
