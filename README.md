@@ -3,7 +3,7 @@
 [![coverage status][coverage-image]][coverage-url]
 
 
-<img src="oppa.svg" width="100%" />
+<img src="https://cdn.rawgit.com/grantila/oppa/HEAD/oppa.svg" width="100%" />
 
 Oppa is an **op**tions **pa**rser (also known as *arguments parser*).
 
