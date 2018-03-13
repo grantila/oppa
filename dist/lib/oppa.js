@@ -106,11 +106,20 @@ class Oppa {
                     ? argument.negatable
                     : true;
         this.arguments.push(argument);
-        shorts.forEach(short => this.byShorts.set(short, argument));
+        shorts.forEach(short => {
+            if (this.byShorts.has(short))
+                throw new Error(`name alias '${short}' already added`);
+            this.byShorts.set(short, argument);
+        });
         longs.forEach(long => {
+            if (this.byLongs.has(long))
+                throw new Error(`name alias '${long}' already added`);
             this.byLongs.set(long, argument);
-            if (argument.type === 'boolean' && argument.negatable !== false)
+            if (argument.type === 'boolean' && argument.negatable !== false) {
+                if (this.byLongs.has('no-' + long))
+                    throw new Error(`name alias 'no-${long}' already added`);
                 this.byLongs.set('no-' + long, argument);
+            }
         });
         // Best cast ever
         return this;

@@ -39,6 +39,39 @@ describe( 'basics', ( ) =>
 		expect( result.unknown ).to.deep.equal( [ ] );
 		expect( result.dashdash ).to.deep.equal( [ ] );
 	} );
+
+	it( 'should throw on already existing (long) name', ( ) =>
+	{
+		const parser = ( ) =>
+			oppa( )
+			.add( { name: 'foo', type: 'string' } )
+			.add( { name: 'bar', type: 'string' } )
+			.add( { name: 'foo', type: 'string' } );
+
+		expect( parser ).to.throw( /'foo'.*already added/ );
+	} );
+
+	it( 'should throw on conflicting auto-negated long name', ( ) =>
+	{
+		const parser = ( ) =>
+			oppa( )
+			.add( { name: 'foo', type: 'boolean' } )
+			.add( { name: 'bar', type: 'boolean' } )
+			.add( { name: 'no-foo', type: 'boolean' } );
+
+		expect( parser ).to.throw( /fo.*already added/ );
+	} );
+
+	it( 'should throw on already existing (short) name', ( ) =>
+	{
+		const parser = ( ) =>
+			oppa( )
+			.add( { name: 'foo', type: 'string', alias: 'f' } )
+			.add( { name: 'bar', type: 'string', alias: 'b' } )
+			.add( { name: 'baz', type: 'string', alias: 'b' } );
+
+		expect( parser ).to.throw( /'b'.*already added/ );
+	} );
 } );
 
 describe( 'boolean', ( ) =>

@@ -27,6 +27,27 @@ describe('basics', () => {
         chai_1.expect(result.unknown).to.deep.equal([]);
         chai_1.expect(result.dashdash).to.deep.equal([]);
     });
+    it('should throw on already existing (long) name', () => {
+        const parser = () => _1.oppa()
+            .add({ name: 'foo', type: 'string' })
+            .add({ name: 'bar', type: 'string' })
+            .add({ name: 'foo', type: 'string' });
+        chai_1.expect(parser).to.throw(/'foo'.*already added/);
+    });
+    it('should throw on conflicting auto-negated long name', () => {
+        const parser = () => _1.oppa()
+            .add({ name: 'foo', type: 'boolean' })
+            .add({ name: 'bar', type: 'boolean' })
+            .add({ name: 'no-foo', type: 'boolean' });
+        chai_1.expect(parser).to.throw(/fo.*already added/);
+    });
+    it('should throw on already existing (long) name', () => {
+        const parser = () => _1.oppa()
+            .add({ name: 'foo', type: 'string', alias: 'f' })
+            .add({ name: 'bar', type: 'string', alias: 'b' })
+            .add({ name: 'baz', type: 'string', alias: 'b' });
+        chai_1.expect(parser).to.throw(/'b'.*already added/);
+    });
 });
 describe('boolean', () => {
     it('should handle single unused boolean argument', () => {
