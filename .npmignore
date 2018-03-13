@@ -1,6 +1,5 @@
 .nyc_output/
 coverage/
-lib
 test
 scripts
 .npmignore
