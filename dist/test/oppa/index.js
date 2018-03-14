@@ -35,18 +35,59 @@ describe('basics', () => {
         chai_1.expect(parser).to.throw(/'foo'.*already added/);
     });
     it('should throw on conflicting auto-negated long name', () => {
-        const parser = () => _1.oppa()
+        const parser1 = () => _1.oppa()
             .add({ name: 'foo', type: 'boolean' })
             .add({ name: 'bar', type: 'boolean' })
             .add({ name: 'no-foo', type: 'boolean' });
-        chai_1.expect(parser).to.throw(/fo.*already added/);
+        chai_1.expect(parser1).to.throw(/fo.*already added/);
+        const parser2 = () => _1.oppa()
+            .add({ name: 'no-foo', type: 'boolean' })
+            .add({ name: 'foo', type: 'boolean' })
+            .add({ name: 'bar', type: 'boolean' });
+        chai_1.expect(parser2).to.throw(/fo.*already added/);
     });
-    it('should throw on already existing (long) name', () => {
+    it('should throw on already existing (short) name', () => {
         const parser = () => _1.oppa()
             .add({ name: 'foo', type: 'string', alias: 'f' })
             .add({ name: 'bar', type: 'string', alias: 'b' })
             .add({ name: 'baz', type: 'string', alias: 'b' });
         chai_1.expect(parser).to.throw(/'b'.*already added/);
+    });
+    it('should handle multiple short aliases', () => {
+        const result = _1.oppa()
+            .add({ name: 'foo', type: 'string', alias: ['f', 'o'] })
+            .parse(['-o', 'bar']);
+        chai_1.expect(result.args).to.deep.equal({ 'foo': 'bar' });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal([]);
+    });
+    it('should handle long alias', () => {
+        const result = _1.oppa()
+            .add({ name: 'foo', type: 'string', alias: 'bar' })
+            .parse(['--bar', 'baz']);
+        chai_1.expect(result.args).to.deep.equal({ 'foo': 'baz' });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal([]);
+    });
+    it('should handle multiple long aliases', () => {
+        const result = _1.oppa()
+            .add({ name: 'foo', type: 'string', alias: ['bar', 'baz'] })
+            .parse(['--baz', 'bay']);
+        chai_1.expect(result.args).to.deep.equal({ 'foo': 'bay' });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal([]);
+    });
+    it('should handle mix of short and long aliases', () => {
+        const result = _1.oppa()
+            .add({ name: 'foo', type: 'string', alias: ['bar', 'f', 'baz'] })
+            .parse(['-f', 'bay']);
+        chai_1.expect(result.args).to.deep.equal({ 'foo': 'bay' });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal([]);
     });
 });
 describe('boolean', () => {
@@ -681,8 +722,93 @@ describe('help table', () => {
         chai_1.expect(numC).to.equal(1);
     });
 });
-// TODO: Test multi
-//       Test description
+describe('dash-dash', () => {
+    it('should handle only empty dash-dash', () => {
+        const result = _1.oppa()
+            .add({
+            name: 'foo',
+            type: 'number',
+        })
+            .parse(['--']);
+        chai_1.expect(result.args).to.deep.equal({});
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal(['--']);
+    });
+    it('should handle empty dash-dash after arguments', () => {
+        const result = _1.oppa()
+            .add({
+            name: 'foo',
+            type: 'number',
+        })
+            .parse(['--foo', '47', '--']);
+        chai_1.expect(result.args).to.deep.equal({ foo: 47 });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal(['--']);
+    });
+    it('should handle empty dash-dash after rest', () => {
+        const result = _1.oppa()
+            .add({
+            name: 'foo',
+            type: 'number',
+        })
+            .parse(['--foo', '47', 'bar', '--']);
+        chai_1.expect(result.args).to.deep.equal({ foo: 47 });
+        chai_1.expect(result.rest).to.deep.equal(['bar']);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal(['--']);
+    });
+    it('should handle data after dash-dash after rest', () => {
+        const result = _1.oppa()
+            .add({
+            name: 'foo',
+            type: 'number',
+        })
+            .parse(['--foo', '47', 'bar', '--', 'baz']);
+        chai_1.expect(result.args).to.deep.equal({ foo: 47 });
+        chai_1.expect(result.rest).to.deep.equal(['bar']);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal(['--', 'baz']);
+    });
+});
+describe('multi', () => {
+    it('should handle multi-args and stop at next arg', () => {
+        const result = _1.oppa()
+            .add({
+            name: 'foo',
+            type: 'number',
+            multi: true,
+        })
+            .add({
+            name: 'bar',
+            type: 'boolean',
+        })
+            .parse(['--foo', '1', '2', '3', '--bar']);
+        chai_1.expect(result.args).to.deep.equal({ foo: [1, 2, 3], bar: true });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal([]);
+    });
+    it('should handle multi-args and stop at dash-dash', () => {
+        const result = _1.oppa()
+            .add({
+            name: 'foo',
+            type: 'number',
+            multi: true,
+        })
+            .add({
+            name: 'bar',
+            type: 'boolean',
+        })
+            .parse(['--foo', '1', '2', '3', '--']);
+        chai_1.expect(result.args).to.deep.equal({ foo: [1, 2, 3] });
+        chai_1.expect(result.rest).to.deep.equal([]);
+        chai_1.expect(result.unknown).to.deep.equal([]);
+        chai_1.expect(result.dashdash).to.deep.equal(['--']);
+    });
+});
+// TODO: Test description
 //       Test values
 //       Test examples
 //       Test match
