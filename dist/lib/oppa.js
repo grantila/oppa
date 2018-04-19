@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const defaultOptions = {
     name: null,
     version: null,
+    usage: null,
     description: null,
     noHelp: false,
     allowUnknown: false,
@@ -262,7 +263,10 @@ class Oppa {
         const line = (...texts) => console.log("  ", ...texts);
         const name = this.opts.name ? (this.opts.name + " ") : "";
         line();
-        line("Usage: " + name + "[options]");
+        if (this.opts.usage)
+            line("Usage: " + this.opts.usage);
+        else
+            line("Usage: " + name + "[options]");
         line();
         if (this.opts.description) {
             const lines = Array.isArray(this.opts.description)

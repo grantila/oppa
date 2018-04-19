@@ -103,6 +103,7 @@ The options to the `oppa( )` function are:
 {
     name: string;
     version: string;
+    usage: string;
     description: Description;
     noHelp: boolean;
     allowUnknown: boolean;
@@ -111,7 +112,7 @@ The options to the `oppa( )` function are:
 }
 ```
 
-`name`, `version` and `description` are used for the auto-generated `--help` and `--version` options.
+`name`, `version`, `usage` and `description` are used for the auto-generated `--help` and `--version` options.
 
 If `noHelp` is true, a `--help` will not be auto-generated.
 

@@ -95,6 +95,7 @@ export declare type Argument<Name extends string = string> = BaseArgument<Name> 
 export interface OppaOptions {
     name: string;
     version: string;
+    usage: string;
     description: Description;
     noHelp: boolean;
     allowUnknown: boolean;

@@ -457,6 +457,14 @@ describe('help', () => {
         chai_1.expect(lines.filter(line => /Usage:/.test(line)).length)
             .to.equal(1);
     });
+    it('should print custom usage if provided', () => {
+        const { lines, cleanup } = mockConsoleLog();
+        const usage = "foo bar";
+        _1.oppa({ usage }).showHelp();
+        cleanup();
+        const helpLine = lines.filter(line => /Usage: foo bar/.test(line));
+        chai_1.expect(helpLine.length).to.equal(1);
+    });
 });
 describe('version', () => {
     it('should print version on -v', () => {
