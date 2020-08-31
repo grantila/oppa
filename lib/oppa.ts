@@ -739,3 +739,5 @@ export function oppa( opts?: Partial< OppaOptions > ): Oppa< { } >
 {
 	return new Oppa< { } >( Object.assign( { }, defaultOptions, opts ) );
 }
+
+export type TypeOf< T > = T extends Oppa< infer U > ? Result< U > : never;

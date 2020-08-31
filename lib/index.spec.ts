@@ -626,7 +626,7 @@ describe( 'help', ( ) =>
 
 		const helpLine = lines.filter( line => /Usage: foo bar/.test( line ) );
 
-		expect( helpLine.length ).to.equal( 1 );
+		expect( helpLine.length ).toBe( 1 );
 	} );
 } );
 

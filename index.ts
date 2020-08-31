@@ -1,2 +1,2 @@
 
-export { oppa } from './lib/oppa'
+export { oppa, TypeOf } from './lib/oppa'
