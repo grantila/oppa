@@ -1,8 +1,4 @@
-
-import 'mocha'
-import { expect } from 'chai'
-
-import { oppa } from '../../'
+import { oppa, TypeOf } from './oppa'
 
 
 function mockConsoleLog( )
@@ -24,20 +20,20 @@ describe( 'basics', ( ) =>
 	{
 		const result = oppa( ).parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle rest on empty arguments', ( ) =>
 	{
 		const result = oppa( ).parse( [ 'foo' ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ 'foo' ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ 'foo' ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should throw on already existing (long) name', ( ) =>
@@ -48,7 +44,7 @@ describe( 'basics', ( ) =>
 			.add( { name: 'bar', type: 'string' } )
 			.add( { name: 'foo', type: 'string' } );
 
-		expect( parser ).to.throw( /'foo'.*already added/ );
+		expect( parser ).toThrow( /'foo'.*already added/ );
 	} );
 
 	it( 'should throw on conflicting auto-negated long name', ( ) =>
@@ -59,7 +55,7 @@ describe( 'basics', ( ) =>
 			.add( { name: 'bar', type: 'boolean' } )
 			.add( { name: 'no-foo', type: 'boolean' } );
 
-		expect( parser1 ).to.throw( /fo.*already added/ );
+		expect( parser1 ).toThrow( /fo.*already added/ );
 
 		const parser2 = ( ) =>
 			oppa( )
@@ -67,7 +63,7 @@ describe( 'basics', ( ) =>
 			.add( { name: 'foo', type: 'boolean' } )
 			.add( { name: 'bar', type: 'boolean' } );
 
-		expect( parser2 ).to.throw( /fo.*already added/ );
+		expect( parser2 ).toThrow( /fo.*already added/ );
 	} );
 
 	it( 'should throw on already existing (short) name', ( ) =>
@@ -78,7 +74,7 @@ describe( 'basics', ( ) =>
 			.add( { name: 'bar', type: 'string', alias: 'b' } )
 			.add( { name: 'baz', type: 'string', alias: 'b' } );
 
-		expect( parser ).to.throw( /'b'.*already added/ );
+		expect( parser ).toThrow( /'b'.*already added/ );
 	} );
 
 	it( 'should handle multiple short aliases', ( ) =>
@@ -88,10 +84,10 @@ describe( 'basics', ( ) =>
 			.add( { name: 'foo', type: 'string', alias: [ 'f', 'o' ] } )
 			.parse( [ '-o', 'bar' ] );
 
-		expect( result.args ).to.deep.equal( { 'foo': 'bar' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { 'foo': 'bar' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle long alias', ( ) =>
@@ -101,10 +97,10 @@ describe( 'basics', ( ) =>
 			.add( { name: 'foo', type: 'string', alias: 'bar' } )
 			.parse( [ '--bar', 'baz' ] );
 
-		expect( result.args ).to.deep.equal( { 'foo': 'baz' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { 'foo': 'baz' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle multiple long aliases', ( ) =>
@@ -114,10 +110,10 @@ describe( 'basics', ( ) =>
 			.add( { name: 'foo', type: 'string', alias: [ 'bar', 'baz' ] } )
 			.parse( [ '--baz', 'bay' ] );
 
-		expect( result.args ).to.deep.equal( { 'foo': 'bay' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { 'foo': 'bay' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle mix of short and long aliases', ( ) =>
@@ -127,15 +123,15 @@ describe( 'basics', ( ) =>
 			.add( { name: 'foo', type: 'string', alias: [ 'bar', 'f', 'baz' ] } )
 			.parse( [ '-f', 'bay' ] );
 
-		expect( result.args ).to.deep.equal( { 'foo': 'bay' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { 'foo': 'bay' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
 describe( 'boolean', ( ) =>
-{	
+{
 	it( 'should handle single unused boolean argument', ( ) =>
 	{
 		const result = oppa( )
@@ -146,10 +142,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single unused boolean argument (default=false)', ( ) =>
@@ -163,10 +159,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { add: false } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { add: false } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single unused boolean argument (default=true)', ( ) =>
@@ -180,10 +176,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { add: true } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { add: true } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single used boolean argument', ( ) =>
@@ -196,10 +192,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ '-a' ] );
 
-		expect( result.args ).to.deep.equal( { add: true } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { add: true } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single negated boolean argument', ( ) =>
@@ -212,10 +208,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ '--no-add' ] );
 
-		expect( result.args ).to.deep.equal( { add: false } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { add: false } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single used boolean argument (overriding default)',
@@ -230,10 +226,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ '-a' ] );
 
-		expect( result.args ).to.deep.equal( { add: true } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { add: true } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single negated boolean argument (overriding default)',
@@ -248,10 +244,10 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ '--no-add' ] );
 
-		expect( result.args ).to.deep.equal( { add: false } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { add: false } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'shouldn\'t allow value ("=value") for booleans', ( ) =>
@@ -264,7 +260,7 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ '--add=1' ] );
 
-		expect( parser ).to.throw( 'usage' );
+		expect( parser ).toThrow( 'usage' );
 	} );
 
 	it( 'shouldn\'t allow value ("=value") for last shortened boolean', ( ) =>
@@ -278,12 +274,12 @@ describe( 'boolean', ( ) =>
 			} )
 			.parse( [ '-xa=1' ] );
 
-		expect( parser ).to.throw( 'usage' );
+		expect( parser ).toThrow( 'usage' );
 	} );
 } );
 
 describe( 'string', ( ) =>
-{	
+{
 	it( 'should handle single unused string argument', ( ) =>
 	{
 		const result = oppa( )
@@ -294,10 +290,10 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single unused string argument (empty default)', ( ) =>
@@ -311,10 +307,10 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { foo: '' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: '' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single unused string argument (non-empty default)',
@@ -329,10 +325,10 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { foo: 'bar' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 'bar' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single used string argument', ( ) =>
@@ -345,10 +341,10 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ '-f', 'bar' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 'bar' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 'bar' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single empty string argument', ( ) =>
@@ -361,10 +357,10 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ '-f', '' ] );
 
-		expect( result.args ).to.deep.equal( { foo: '' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: '' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single used string argument (overriding default)',
@@ -379,10 +375,10 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ '-f', 'bar' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 'bar' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 'bar' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single negated string argument (overriding default)',
@@ -397,15 +393,15 @@ describe( 'string', ( ) =>
 			} )
 			.parse( [ '-f', '' ] );
 
-		expect( result.args ).to.deep.equal( { foo: '' } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: '' } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
 describe( 'number', ( ) =>
-{	
+{
 	it( 'should handle single unused number argument', ( ) =>
 	{
 		const result = oppa( )
@@ -416,10 +412,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single unused number argument (default=0)', ( ) =>
@@ -433,10 +429,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { foo: 0 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 0 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single unused number argument (default=1)',
@@ -451,10 +447,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ ] );
 
-		expect( result.args ).to.deep.equal( { foo: 1 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 1 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single non-zero number argument', ( ) =>
@@ -467,10 +463,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', '1' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 1 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 1 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single zero number argument', ( ) =>
@@ -483,10 +479,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', '0' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 0 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 0 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should fail on single empty string argument', ( ) =>
@@ -499,7 +495,7 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', '' ] );
 
-		expect( parse ).to.throw( );
+		expect( parse ).toThrow( );
 	} );
 
 	it( 'should fail on single non-numeric argument', ( ) =>
@@ -512,7 +508,7 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', 'x' ] );
 
-		expect( parse ).to.throw( "Invalid numeric" );
+		expect( parse ).toThrow( "Invalid numeric" );
 	} );
 
 	it( 'should handle single used number argument (overriding default)',
@@ -527,10 +523,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', '1' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 1 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 1 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle single negated number argument (overriding default)',
@@ -545,10 +541,10 @@ describe( 'number', ( ) =>
 			} )
 			.parse( [ '-f', '0' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 0 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 0 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
@@ -564,8 +560,8 @@ describe( 'help', ( ) =>
 
 		const helpLine = lines.filter( line => /-h, --help/.test( line ) );
 
-		expect( helpLine.length ).to.equal( 1 );
-		expect( helpLine[ 0 ] ).to.contain( "help" );
+		expect( helpLine.length ).toBe( 1 );
+		expect( helpLine[ 0 ] ).toContain( "help" );
 	} );
 
 	it( 'should not print --version unless version is provided', ( ) =>
@@ -578,7 +574,7 @@ describe( 'help', ( ) =>
 
 		const verLine = lines.filter( line => /-v, --version/.test( line ) );
 
-		expect( verLine.length ).to.equal( 0 );
+		expect( verLine.length ).toBe( 0 );
 	} );
 
 	it( 'should print --version if provided', ( ) =>
@@ -591,8 +587,8 @@ describe( 'help', ( ) =>
 
 		const verLine = lines.filter( line => /-v, --version/.test( line ) );
 
-		expect( verLine.length ).to.equal( 1 );
-		expect( verLine[ 0 ] ).to.contain( "version" );
+		expect( verLine.length ).toBe( 1 );
+		expect( verLine[ 0 ] ).toContain( "version" );
 	} );
 
 	it( 'should print --version if provided', ( ) =>
@@ -603,7 +599,7 @@ describe( 'help', ( ) =>
 
 		cleanup( );
 
-		expect( lines ).to.deep.equal( [ '0.0.1' ] );
+		expect( lines ).toStrictEqual( [ '0.0.1' ] );
 	} );
 
 	it( 'should print --help if provided', ( ) =>
@@ -615,7 +611,7 @@ describe( 'help', ( ) =>
 		cleanup( );
 
 		expect( lines.filter( line => /Usage:/.test( line ) ).length )
-			.to.equal( 1 );
+			.toBe( 1 );
 	} );
 
 	it( 'should print custom usage if provided', ( ) =>
@@ -644,7 +640,7 @@ describe( 'version', ( ) =>
 
 		cleanup( );
 
-		expect( lines ).to.deep.equal( [ '1.2.3' ] );
+		expect( lines ).toStrictEqual( [ '1.2.3' ] );
 	} );
 
 	it( 'should print version and program name on -v', ( ) =>
@@ -656,7 +652,7 @@ describe( 'version', ( ) =>
 
 		cleanup( );
 
-		expect( lines ).to.deep.equal( [ 'foo 1.2.3' ] );
+		expect( lines ).toStrictEqual( [ 'foo 1.2.3' ] );
 	} );
 } );
 
@@ -672,7 +668,7 @@ describe( 'unknown', ( ) =>
 			} )
 			.parse( [ '-f', '0', '-g' ] );
 
-		expect( parser ).to.throw( 'Unknown' );
+		expect( parser ).toThrow( 'Unknown' );
 	} );
 
 	it( 'should allow simple unknown arguments', ( ) =>
@@ -685,12 +681,12 @@ describe( 'unknown', ( ) =>
 			} )
 			.parse( [ '-f', '0', '-g' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 0 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [
+		expect( result.args ).toStrictEqual( { foo: 0 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [
 			{ name: 'g', value: undefined }
 		] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should allow valued unknown arguments', ( ) =>
@@ -703,12 +699,12 @@ describe( 'unknown', ( ) =>
 			} )
 			.parse( [ '-f', '0', '-g=x' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 0 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [
+		expect( result.args ).toStrictEqual( { foo: 0 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [
 			{ name: 'g', value: 'x' }
 		] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
@@ -723,10 +719,10 @@ describe( 'negatable', ( ) =>
 			} )
 			.parse( [ '--no-foo' ] );
 
-		expect( result.args ).to.deep.equal( { foo: false } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: false } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should use <negatable> if explicitly true', ( ) =>
@@ -739,10 +735,10 @@ describe( 'negatable', ( ) =>
 			} )
 			.parse( [ '--no-foo' ] );
 
-		expect( result.args ).to.deep.equal( { foo: false } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: false } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'shouldn\'t use <negatable> if explicitly false', ( ) =>
@@ -755,11 +751,11 @@ describe( 'negatable', ( ) =>
 			} )
 			.parse( [ '--no-foo' ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ ] );
 		expect( result.unknown )
-			.to.deep.equal( [ { name: 'no-foo', value: undefined } ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+			.toStrictEqual( [ { name: 'no-foo', value: undefined } ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
@@ -784,11 +780,11 @@ describe( 'realDefault', ( ) =>
 
 		const fooLine = lines.filter( line => /foo/.test( line ) )[ 0 ];
 
-		expect( fooLine ).to.contain( "default: 1" );
-		expect( result.args ).to.deep.equal( { foo: 2 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( fooLine ).toContain( "default: 1" );
+		expect( result.args ).toStrictEqual( { foo: 2 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
@@ -806,7 +802,7 @@ describe( 'match', ( ) =>
 			} )
 			.parse( [ '-f', '1' ] );
 
-		expect( parser ).to.throw( 'Invalid argument' );
+		expect( parser ).toThrow( 'Invalid argument' );
 	} );
 
 	it( 'should handle functions (match)', ( ) =>
@@ -820,10 +816,10 @@ describe( 'match', ( ) =>
 			} )
 			.parse( [ '-f', '2' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 2 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 2 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle regular expressions (mismatch)', ( ) =>
@@ -838,7 +834,7 @@ describe( 'match', ( ) =>
 			} )
 			.parse( [ '-f', '1' ] );
 
-		expect( parser ).to.throw( 'Invalid argument' );
+		expect( parser ).toThrow( 'Invalid argument' );
 	} );
 
 	it( 'should handle regular expressions (match)', ( ) =>
@@ -852,10 +848,10 @@ describe( 'match', ( ) =>
 			} )
 			.parse( [ '-f', '2' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 2 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: 2 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 } );
 
@@ -881,8 +877,8 @@ describe( 'help table', ( ) =>
 		const numA = lines.filter( line => /a.*A/.test( line ) ).length;
 		const numB = lines.filter( line => /b.*B/.test( line ) ).length;
 
-		expect( numA ).to.equal( 1 );
-		expect( numB ).to.equal( 1 );
+		expect( numA ).toBe( 1 );
+		expect( numB ).toBe( 1 );
 	} );
 
 	it( 'should properly print value table (if array of objects)', ( ) =>
@@ -911,9 +907,9 @@ describe( 'help table', ( ) =>
 		const numB = lines.filter( line => /b.*B/.test( line ) ).length;
 		const numC = lines.filter( line => /c.*C/.test( line ) ).length;
 
-		expect( numA ).to.equal( 1 );
-		expect( numB ).to.equal( 1 );
-		expect( numC ).to.equal( 1 );
+		expect( numA ).toBe( 1 );
+		expect( numB ).toBe( 1 );
+		expect( numC ).toBe( 1 );
 	} );
 
 	it( 'should properly print example table (if just object)', ( ) =>
@@ -936,8 +932,8 @@ describe( 'help table', ( ) =>
 		const numA = lines.filter( line => /a.*A/.test( line ) ).length;
 		const numB = lines.filter( line => /b.*B/.test( line ) ).length;
 
-		expect( numA ).to.equal( 1 );
-		expect( numB ).to.equal( 1 );
+		expect( numA ).toBe( 1 );
+		expect( numB ).toBe( 1 );
 	} );
 
 	it( 'should properly print example table (if array of objects)', ( ) =>
@@ -966,9 +962,9 @@ describe( 'help table', ( ) =>
 		const numB = lines.filter( line => /b.*B/.test( line ) ).length;
 		const numC = lines.filter( line => /c.*C/.test( line ) ).length;
 
-		expect( numA ).to.equal( 1 );
-		expect( numB ).to.equal( 1 );
-		expect( numC ).to.equal( 1 );
+		expect( numA ).toBe( 1 );
+		expect( numB ).toBe( 1 );
+		expect( numC ).toBe( 1 );
 	} );
 } );
 
@@ -984,10 +980,10 @@ describe( 'dash-dash', ( ) =>
 			} )
 			.parse( [ '--' ] );
 
-		expect( result.args ).to.deep.equal( { } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ '--' ] );
+		expect( result.args ).toStrictEqual( { } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ '--' ] );
 	} );
 
 	it( 'should handle empty dash-dash after arguments', ( ) =>
@@ -1000,10 +996,10 @@ describe( 'dash-dash', ( ) =>
 			} )
 			.parse( [ '--foo', '47', '--' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 47 } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ '--' ] );
+		expect( result.args ).toStrictEqual( { foo: 47 } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ '--' ] );
 	} );
 
 	it( 'should handle empty dash-dash after rest', ( ) =>
@@ -1016,10 +1012,10 @@ describe( 'dash-dash', ( ) =>
 			} )
 			.parse( [ '--foo', '47', 'bar', '--' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 47 } );
-		expect( result.rest ).to.deep.equal( [ 'bar' ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ '--' ] );
+		expect( result.args ).toStrictEqual( { foo: 47 } );
+		expect( result.rest ).toStrictEqual( [ 'bar' ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ '--' ] );
 	} );
 
 	it( 'should handle data after dash-dash after rest', ( ) =>
@@ -1032,10 +1028,10 @@ describe( 'dash-dash', ( ) =>
 			} )
 			.parse( [ '--foo', '47', 'bar', '--', 'baz' ] );
 
-		expect( result.args ).to.deep.equal( { foo: 47 } );
-		expect( result.rest ).to.deep.equal( [ 'bar' ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ '--', 'baz' ] );
+		expect( result.args ).toStrictEqual( { foo: 47 } );
+		expect( result.rest ).toStrictEqual( [ 'bar' ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ '--', 'baz' ] );
 	} );
 } );
 
@@ -1056,10 +1052,10 @@ describe( 'multi', ( ) =>
 			} )
 			.parse( [ '--foo', '1', '2', '3', '--bar' ] );
 
-		expect( result.args ).to.deep.equal( { foo: [ 1, 2, 3 ], bar: true } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ ] );
+		expect( result.args ).toStrictEqual( { foo: [ 1, 2, 3 ], bar: true } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ ] );
 	} );
 
 	it( 'should handle multi-args and stop at dash-dash', ( ) =>
@@ -1077,10 +1073,36 @@ describe( 'multi', ( ) =>
 			} )
 			.parse( [ '--foo', '1', '2', '3', '--' ] );
 
-		expect( result.args ).to.deep.equal( { foo: [ 1, 2, 3 ] } );
-		expect( result.rest ).to.deep.equal( [ ] );
-		expect( result.unknown ).to.deep.equal( [ ] );
-		expect( result.dashdash ).to.deep.equal( [ '--' ] );
+		expect( result.args ).toStrictEqual( { foo: [ 1, 2, 3 ] } );
+		expect( result.rest ).toStrictEqual( [ ] );
+		expect( result.unknown ).toStrictEqual( [ ] );
+		expect( result.dashdash ).toStrictEqual( [ '--' ] );
+	} );
+} );
+
+describe( 'typeof', ( ) =>
+{
+	it( 'should TypeOf properly', ( ) =>
+	{
+		const opts =
+			oppa( )
+			.add( {
+				name: 'foo',
+				type: 'number',
+			} )
+			.add( {
+				name: 'bar',
+				type: 'boolean',
+			} );
+		const result = opts.parse( [ '--foo', '1', '--bar' ] );
+
+		expect( typeof result.args.foo ).toBe( 'number' );
+		expect( typeof result.args.bar ).toBe( 'boolean' );
+
+		const reTypedResult: TypeOf< typeof opts > = result;
+
+		expect( reTypedResult.args.foo ).toBe( 1 );
+		expect( reTypedResult.args.bar ).toBe( true );
 	} );
 } );
 

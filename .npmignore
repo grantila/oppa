@@ -1,7 +1,0 @@
-.nyc_output/
-coverage/
-test
-scripts
-.npmignore
-.travis.yml
-tsconfig.json

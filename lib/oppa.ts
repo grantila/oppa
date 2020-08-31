@@ -626,7 +626,7 @@ export class Oppa< U >
 
 		const printTable = ( indent: number, rows: PrintableRows ) =>
 		{
-			const width = 
+			const width =
 				rows
 				.map( row => row.key.length )
 				.sort( ( a, b ) => b - a )
@@ -652,7 +652,7 @@ export class Oppa< U >
 						text
 					)
 				);
-	
+
 				handler && handler( indent + width );
 			} );
 		};

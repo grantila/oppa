@@ -1,0 +1,15 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"lib": [ "es2015", "es2017" ],
+		"types": [ "node" ],
+		"outDir": "dist",
+		"noEmit": false,
+		"sourceMap": false,
+		"module": "CommonJS",
+		"target": "esnext"
+	},
+	"exclude": [
+		"**/*.spec.ts"
+	]
+}

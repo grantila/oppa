@@ -2,14 +2,13 @@
 	"compilerOptions": {
 		"declaration": true,
 		"lib": [ "es2015", "es2017" ],
-		"outDir": "dist",
-		"sourceMap": true,
+		"types": [ "jest", "node" ],
+		"noEmit": true,
 		"module": "CommonJS",
 		"target": "esnext"
 	},
 	"include": [
 		"index.ts",
-		"lib",
-		"test"
+		"lib"
 	]
 }

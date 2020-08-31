@@ -1,6 +1,6 @@
 {
   "name": "oppa",
-  "version": "0.0.6",
+  "version": "0.0.0-development",
   "description": "😌  Super easy typesafe options parser for Node.js",
   "author": "Gustaf Räntilä",
   "license": "MIT",
@@ -10,14 +10,15 @@
   "homepage": "https://github.com/grantila/oppa#readme",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "directories": {},
   "scripts": {
-    "build": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/tsc -p .",
-    "mocha": "./node_modules/.bin/mocha --bail --check-leaks dist/test",
-    "test": "node_modules/.bin/nyc npm run mocha",
+    "build": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
+    "test": "node_modules/.bin/jest --coverage",
     "buildtest": "npm run build && npm run test",
-    "buildtestcov": "npm run buildtest && npm run coverage",
-    "coverage": "node_modules/.bin/nyc report --reporter=html"
+    "cz": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -31,15 +32,20 @@
     "options",
     "arguments"
   ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "devDependencies": {
-    "@types/chai": "4.x",
-    "@types/mocha": "5.x",
-    "@types/node": "9.x",
-    "chai": "4.x",
-    "coveralls": "3.x",
-    "mocha": "5.x",
-    "nyc": "11.x",
-    "rimraf": "2.x",
-    "typescript": "2.8.x"
+    "@types/jest": "^26.0.10",
+    "@types/node": "^14.6.2",
+    "commitizen": "^4.2.1",
+    "coveralls": "3.1.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "jest": "^26.4.2",
+    "rimraf": "3.0.2",
+    "ts-jest": "^26.3.0",
+    "typescript": "4.0.2"
   }
 }
