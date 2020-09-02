@@ -106,6 +106,8 @@ The options to the `oppa( )` function are:
     usage: string;
     description: Description;
     noHelp: boolean;
+    noHelpAlias: boolean;
+    noVersionAlias: boolean;
     allowUnknown: boolean;
     throwOnError: boolean;
     noExit: boolean;
@@ -115,6 +117,8 @@ The options to the `oppa( )` function are:
 `name`, `version`, `usage` and `description` are used for the auto-generated `--help` and `--version` options.
 
 If `noHelp` is true, a `--help` will not be auto-generated.
+
+`noHelpAlias` and `noVersionAlias` will prevent the auto-generated `--version` and `--help` to have shortcut aliases `-v` and `-h`, so they can be used for other options, e.g. `verbose` and `host`.
 
 `allowUnknown` will cause oppa not to fail on unknown arguments, but simply keep them as booleans or strings (in its own array of `{ name, value }` objects called `unknown`). `--foo` will add a boolean `foo` and set it to `true`. `--bar=baz` will set the name `bar` to the string `baz`.
 

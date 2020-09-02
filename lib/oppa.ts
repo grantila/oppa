@@ -135,6 +135,8 @@ export interface OppaOptions
 	usage: string;
 	description: Description;
 	noHelp: boolean;
+	noHelpAlias: boolean;
+	noVersionAlias: boolean;
 	allowUnknown: boolean;
 	throwOnError: boolean;
 	noExit: boolean;
@@ -146,6 +148,8 @@ const defaultOptions: OppaOptions = {
 	usage: null,
 	description: null,
 	noHelp: false,
+	noHelpAlias: false,
+	noVersionAlias: false,
 	allowUnknown: false,
 	throwOnError: false,
 	noExit: false,
@@ -283,7 +287,7 @@ export class Oppa< U >
 		this.add( {
 			name: 'help',
 			type: 'boolean',
-			alias: 'h',
+			...( !opts.noHelpAlias ? { alias: 'h' } : { } ),
 			description: 'Print (this) help screen',
 			negatable: false,
 			match: ( ) =>
@@ -297,7 +301,7 @@ export class Oppa< U >
 			this.add( {
 				name: 'version',
 				type: 'boolean',
-				alias: 'v',
+				...( !opts.noVersionAlias ? { alias: 'v' } : { } ),
 				description: 'Print the program version',
 				negatable: false,
 				match: ( ) =>

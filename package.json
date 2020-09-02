@@ -18,11 +18,12 @@
     "build": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
     "test": "node_modules/.bin/jest --coverage",
     "buildtest": "npm run build && npm run test",
-    "cz": "git-cz"
+    "cz": "git-cz",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grantila/oppa.git"
+    "url": "https://github.com/grantila/oppa.git"
   },
   "keywords": [
     "oppa",
@@ -46,6 +47,7 @@
     "jest": "^26.4.2",
     "rimraf": "3.0.2",
     "ts-jest": "^26.3.0",
-    "typescript": "4.0.2"
+    "typescript": "4.0.2",
+    "semantic-release": "^17.1.1"
   }
 }

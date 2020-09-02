@@ -656,6 +656,46 @@ describe( 'version', ( ) =>
 	} );
 } );
 
+describe( 'no help/version aliases', ( ) =>
+{
+	it( "shouldn't use -h if noHelpAlias", ( ) =>
+	{
+		const { args: { host } } =
+			oppa( {
+				version: '1.2.3',
+				noHelpAlias: true,
+				noExit: true,
+			} )
+			.add( {
+				name: "host",
+				alias: "h",
+				type: "string",
+			} )
+			.parse( [ '-h', 'foo' ] );
+
+		expect( host ).toStrictEqual( "foo" );
+	} );
+
+	it( "shouldn't use -v if noVersionAlias", ( ) =>
+	{
+		const { args: { verbose } } =
+			oppa( {
+				version: '1.2.3',
+				name: 'foo',
+				noVersionAlias: true,
+				noExit: true,
+			} )
+			.add( {
+				name: "verbose",
+				alias: "v",
+				type: "boolean",
+			} )
+			.parse( [ '-v' ] );
+
+		expect( verbose ).toStrictEqual( true );
+	} );
+} );
+
 describe( 'unknown', ( ) =>
 {
 	it( 'should not allow unknown arguments', ( ) =>
