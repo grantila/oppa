@@ -1,6 +1,6 @@
 [![npm version][npm-image]][npm-url]
 [![downloads][downloads-image]][npm-url]
-[![build status][travis-image]][build-url]
+[![build status][build-image]][build-url]
 [![coverage status][coverage-image]][coverage-url]
 [![Language grade: JavaScript][lgtm-image]][lgtm-url]
 
@@ -257,10 +257,10 @@ For sub-commands (e.g. like `git`), oppa is designed not to support this as a si
 
 [npm-image]: https://img.shields.io/npm/v/oppa.svg
 [npm-url]: https://npmjs.org/package/oppa
-[downloads-image]: https://img.shields.io/npm/dm/opps.svg
-[build-image]: https://img.shields.io/github/workflow/status/grantila/opps/Master.svg
-[build-url]: https://github.com/grantila/opps/actions?query=workflow%3AMaster
-[coverage-image]: https://coveralls.io/repos/github/grantila/opps/badge.svg?branch=master
-[coverage-url]: https://coveralls.io/github/grantila/opps?branch=master
-[lgtm-image]: https://img.shields.io/lgtm/grade/javascript/g/grantila/opps.svg?logo=lgtm&logoWidth=18
-[lgtm-url]: https://lgtm.com/projects/g/grantila/opps/context:javascript
+[downloads-image]: https://img.shields.io/npm/dm/oppa.svg
+[build-image]: https://img.shields.io/github/workflow/status/grantila/oppa/Master.svg
+[build-url]: https://github.com/grantila/oppa/actions?query=workflow%3AMaster
+[coverage-image]: https://coveralls.io/repos/github/grantila/oppa/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/grantila/oppa?branch=master
+[lgtm-image]: https://img.shields.io/lgtm/grade/javascript/g/grantila/oppa.svg?logo=lgtm&logoWidth=18
+[lgtm-url]: https://lgtm.com/projects/g/grantila/oppa/context:javascript
