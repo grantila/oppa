@@ -1,132 +1,23 @@
-'use strict'
+import { tableIndent } from "./constants"
+import {
+	FlatTableRow,
+	flattenTable,
+	GetExtraDescriptionRowsFunction,
+	PrintableRows,
+	printTable,
+} from "./table"
+import {
+	Argument,
+	ArgumentAsString,
+	ArgumentType,
+	Description,
+	Group,
+	GroupTag,
+	isArgument,
+	isGroup,
+} from "./types"
+import { arrayify, validate } from "./util"
 
-export type ArgumentType = string | boolean | number;
-
-export type Description = string | ReadonlyArray< string >;
-
-export type ValidatorFunction< T = any > =
-	( value: T, rawValue: string, argument: Argument ) => boolean;
-
-export type Validator< T > = RegExp | ValidatorFunction< T >;
-
-export type TableRow = { [ left: string ]: Description };
-export type TableRows = ReadonlyArray< TableRow >;
-export type Table = TableRow | TableRows;
-
-export interface DefaultableSingle< T >
-{
-	multi?: false;
-	default?: T;
-	realDefault?: T;
-	match?: Validator< T >;
-}
-
-export interface DefaultableMulti< T >
-{
-	multi: true;
-	default?: ReadonlyArray< T >;
-	realDefault?: ReadonlyArray< T >;
-	match?: Validator< T >;
-}
-
-export type ArgumentAsString = { type: 'string'; } &
-	( DefaultableSingle< string > | DefaultableMulti< string > );
-
-export type ArgumentAsBoolean = { type: 'boolean'; } &
-	DefaultableSingle< boolean >;
-
-export type ArgumentAsNumber = { type: 'number'; } &
-	( DefaultableSingle< number > | DefaultableMulti< number > );
-
-export type TypedArgument =
-	ArgumentAsString | ArgumentAsBoolean | ArgumentAsNumber;
-
-export interface BaseArgument< Name extends string >
-{
-	/**
-	 * The argument name (the long name)
-	 */
-	name: Name;
-
-	/**
-	 * The data type representing this argument
-	 */
-	//type: 'string' | 'boolean' | 'number';
-
-	/**
-	 * A multi-argument takes more than one value. It consumes all
-	 * non-dash-beginning arguments as values.
-	 */
-	//multi?: boolean;
-
-	/**
-	 * Shortcut (one character) alias of the argument
-	 */
-	alias?: string | ReadonlyArray< string >;
-
-	/**
-	 * Description of the argument (can be multi-lined by providing an array)
-	 */
-	description?: Description;
-
-	/**
-	 * Defines whether the argument is negatable or not (--arg vs --no-arg)
-	 *
-	 * Defaults to true for boolean arguments and false for other.
-	 */
-	negatable?: boolean;
-
-	/**
-	 * The default-value
-	 */
-	//default?: ArgumentType;
-
-	/**
-	 * The *real* default-value (not printed in the help section but used
-	 * run-time)
-	 */
-	//realDefault?: ArgumentType;
-
-	/**
-	 * The extra arguments handled by this argument.
-	 *
-	 * Should be on the form "<required>", "[optional]" or "[multi...]" or a
-	 * combination of these.
-	 *
-	 * Can not be used if <values> are provided
-	 */
-	//args?: string;
-
-	/**
-	 * Hard-coded list of acceptable values and/or values provided to the help
-	 * screen.
-	 *
-	 * By default, values specified cause them to be matched against the input
-	 * for validation (which can be over-ruled by <match>) and will be used to
-	 * show the user possible values.
-	 *
-	 * The keys in this object represent the argument string and the value is
-	 * a description of it (as a string or an array of strings).
-	 *
-	 * Can not be used if <args> are provided
-	 */
-	values?: Table;
-
-	/**
-	 * A list of examples. Each example is an object with a key being the
-	 * particular example string, and the value is a description as a string
-	 * or array of strings.
-	 */
-	example?: Table;
-
-	/**
-	 * A matcher function or regex which validates the input
-	 */
-	//match?: Validator,
-}
-
-export type Argument< Name extends string = string > =
-	BaseArgument< Name > & TypedArgument;
 
 export interface OppaOptions
 {
@@ -220,63 +111,10 @@ function parseValue( value: string, argument: Argument, raw: string )
 	return value;
 };
 
-function validate(
-	value: ArgumentType,
-	raw: string,
-	argument: Argument
-)
-{
-	if ( !argument.match )
-		return;
-
-	const result =
-		( typeof argument.match === 'function' )
-		? ( < ValidatorFunction >argument.match )( value, raw, argument )
-		: argument.match.test( raw )
-
-	if ( !result )
-		throw new Error( `Invalid argument for ${argument.name}: ${value}` );
-}
-
-function arrayify< T >( value: T | Array< T > | ReadonlyArray< T >  )
-: Array< T >;
-function arrayify< T >( value: T | Array< T > ): Array< T >
-{
-	if ( value == null )
-		return [ ];
-	else if ( Array.isArray( value ) )
-		return [ ...value ];
-	else
-		return [ value ];
-}
-
-type FlatTableRow = { key: string; desc: ReadonlyArray< string >; };
-type PrintableRows =
-	ReadonlyArray< FlatTableRow & { handler?: ( width: number ) => void; } >;
-
-function flattenTable( table?: Table )
-{
-	const rows =
-		!table
-		? [ ] as TableRows
-		: !Array.isArray( table )
-		? [ < TableRow >table ] as TableRows
-		: table as TableRows;
-
-	return ( [ ] as FlatTableRow[ ] ).concat(
-		...
-		rows
-		.map( obj =>
-			Object.keys( obj )
-			.map( key => ( { key, desc: arrayify( obj[ key ] ) } ) )
-		)
-	);
-}
-
 export class Oppa< U >
 {
 	private readonly opts: OppaOptions;
-	private readonly arguments: Array< Argument > = [ ];
+	private readonly arguments: Array< Argument | GroupTag > = [ ];
 	private byLongs: Map< string, Argument > = new Map( );
 	private byShorts: Map< string, Argument > = new Map( );
 
@@ -310,6 +148,12 @@ export class Oppa< U >
 					return true;
 				},
 			} );
+	}
+
+	group( group: Group ): Oppa< U >
+	{
+		this.arguments.push( { isGroup: true, ...group } );
+		return this;
 	}
 
 	add< T extends string >( argument: Argument< T > & OppaSingleString )
@@ -525,6 +369,7 @@ export class Oppa< U >
 		}
 
 		this.arguments
+			.filter( isArgument )
 			.filter( argument =>
 				( 'default' in argument ) || ( 'realDefault' in argument )
 			)
@@ -616,61 +461,38 @@ export class Oppa< U >
 			? `--(no-)${text}`
 			: `--${text}`;
 
-		const widenLeft = ( text: string, width: number ) =>
-			' '.repeat( width - text.length ) + text;
-		const widenRight = ( text: string, width: number ) =>
-			text + ' '.repeat( width - text.length );
-
 		const valueify = ( argument: Argument ) =>
 			argument.type === 'boolean'
 			? ''
 			: argument.multi
-			? ` <${argument.name}...>`
-			: ` <${argument.name}>`;
+			? ` <${argument.argumentName ?? argument.name}...>`
+			: ` <${argument.argumentName ?? argument.name}>`;
 
-		const printTable = ( indent: number, rows: PrintableRows ) =>
+		let currentGroup: undefined | GroupTag = undefined;
+
+		const args = this.arguments
+		.map( argument =>
 		{
-			const width =
-				rows
-				.map( row => row.key.length )
-				.sort( ( a, b ) => b - a )
-				[ 0 ];
-
-			const prefix = " ".repeat( indent );
-
-			rows.forEach( ( { key, desc, handler } ) =>
+			if ( !isArgument( argument ) )
 			{
-				const [ first, ...rest ] = desc;
+				currentGroup = argument;
+				return argument;
+			}
+			else
+			{
+				const name =
+					shortFirst( [
+						argument.name,
+						...arrayify( argument.alias )
+					] )
+					.map( name => dashify( name, argument ) )
+					.join( ', ' )
+					+ valueify( argument );
 
-				line(
-					prefix +
-					widenRight( key, width ) +
-					"   " +
-					first
-				);
-				rest.forEach( text =>
-					line(
-						prefix +
-						widenRight( '', width ) +
-						"   " +
-						text
-					)
-				);
-
-				handler && handler( indent + width );
-			} );
-		};
-
-		const args = this.arguments.map( argument =>
-		{
-			const name =
-				shortFirst( [ argument.name, ...arrayify( argument.alias ) ] )
-				.map( name => dashify( name, argument ) )
-				.join( ', ' )
-				+ valueify( argument );
-
-			return { name, argument };
-		} );
+				return { name, argument, currentGroup };
+			}
+		} )
+		.filter( ( v ): v is NonNullable< typeof v > => !!v );
 
 		if ( args.length )
 		{
@@ -679,8 +501,19 @@ export class Oppa< U >
 		}
 
 		const rows: PrintableRows = args
-		.map( ( { name, argument } ) =>
+		.map( ( row ): FlatTableRow =>
 		{
+			if ( isGroup( row ) )
+			{
+				return {
+					key: row.name,
+					desc: [ ],
+					group: row,
+					isGroup: true,
+				};
+			}
+
+			const { name, argument } = row;
 			const description =
 				!argument.description
 				? [ '' ]
@@ -700,39 +533,41 @@ export class Oppa< U >
 			if ( rest.length > 0 && defaultValue )
 				rest.push( defaultValue );
 
-			const handler = ( width: number ) =>
+			const getExtraDescriptionRows: GetExtraDescriptionRowsFunction =
+				( ) =>
 			{
-				const prefix = " ".repeat( width );
+				const ret: Array< string > = [ ];
 
 				const values = flattenTable( argument.values );
 				if ( values.length > 0 )
 				{
-					line( );
-					line( prefix + "   Values:" );
-					printTable( width + 6, values );
+					ret.push( "" );
+					ret.push( "   Values:" );
+					ret.push( ...printTable( 6, values ) );
 				}
 
 				const examples = flattenTable( argument.example );
 				if ( examples.length > 0 )
 				{
-					line( );
-					line( prefix + "   Example:" );
-					printTable( width + 6, examples );
+					ret.push( "" );
+					ret.push( "   Example:" );
+					ret.push( ...printTable( 6, examples ) );
 				}
 
 				if ( values.length > 0 || examples.length > 0 )
-					line( );
+					ret.push( "" );
+
+				return ret;
 			};
 
 			return {
 				key: name,
 				desc: [ firstDescription, ...rest ],
-				handler,
+				group: row.currentGroup,
+				getExtraDescriptionRows,
 			};
 		} );
-		printTable( 3, rows );
-
-		line( );
+		console.log( printTable( tableIndent, rows ).join( "\n" ) + "\n" );
 
 		if ( exit && !this.opts.noExit )
 			process.exit( 0 );

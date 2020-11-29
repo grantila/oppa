@@ -1,6 +1,8 @@
 [![npm version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![downloads][downloads-image]][npm-url]
+[![build status][travis-image]][build-url]
 [![coverage status][coverage-image]][coverage-url]
+[![Language grade: JavaScript][lgtm-image]][lgtm-url]
 
 
 <img src="https://cdn.rawgit.com/grantila/oppa/HEAD/oppa.svg" width="100%" />
@@ -28,6 +30,7 @@ By default, oppa creates `--help` (and `-h`) arguments which it uses to produce 
     - Specific values, individually documented in `--help`
 - Understands *dash-dash* separation (`--`)
 - Smart defaults (what appears as default in `--help` can be dynamic at run-time)
+- Groups of arguments (potentially shown in different colors in `--help`)
 
 
 # Usage
@@ -193,6 +196,24 @@ These will cause the following `--help` output:
 ```
 
 
+## Groups
+
+Arguments can be grouped, and have the group name printed above the group arguments in `--help`. They can also be in a separate color (background and/or foreground):
+
+```ts
+    oppa( )
+    .add( { name: 'force' } ) // Generic ungrouped
+
+    .group( { name: "Inputs", color: 'black', backgroundColor: '#8ff' } )
+    .add( { name: 'allow-bad' } )
+    .add( { name: 'filter-deprecated' } )
+
+    .group( { name: "Viewing", color: '#fff', backgroundColor: 'blue' } )
+    .add( { name: 'view-all' } )
+    .add( { name: 'defailed' } );
+```
+
+
 # Sub-commands
 
 For sub-commands (e.g. like `git`), oppa is designed not to support this as a single-step parsing solution. Instead, you're encouraged to run oppa again. Oppa saves no global state, everything is local to an `oppa( )` context.
@@ -210,24 +231,24 @@ For sub-commands (e.g. like `git`), oppa is designed not to support this as a si
 
     switch ( subCommand ) // The first non-option argument
     {
-        case 'init': return runInit( );
-        case 'push': return runPush( );
+        case 'init': return runInit( subArgs );
+        case 'push': return runPush( subArgs );
     }
 
     // ...
 
-    function runInit( )
+    function runInit( args )
     {
         // Parse <init> arguments:
         const initOptions = oppa( )
             .add( /* ... */ )
             .add( /* ... */ )
-            .parse( subArgs );
+            .parse( args );
 
         // ...
     }
 
-    function runPush( )
+    function runPush( args )
     {
         // ...
     }
@@ -236,7 +257,10 @@ For sub-commands (e.g. like `git`), oppa is designed not to support this as a si
 
 [npm-image]: https://img.shields.io/npm/v/oppa.svg
 [npm-url]: https://npmjs.org/package/oppa
-[travis-image]: https://img.shields.io/travis/grantila/oppa.svg
-[travis-url]: https://travis-ci.org/grantila/oppa
-[coverage-image]: https://coveralls.io/repos/github/grantila/oppa/badge.svg?branch=master
-[coverage-url]: https://coveralls.io/github/grantila/oppa?branch=master
+[downloads-image]: https://img.shields.io/npm/dm/opps.svg
+[build-image]: https://img.shields.io/github/workflow/status/grantila/opps/Master.svg
+[build-url]: https://github.com/grantila/opps/actions?query=workflow%3AMaster
+[coverage-image]: https://coveralls.io/repos/github/grantila/opps/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/grantila/opps?branch=master
+[lgtm-image]: https://img.shields.io/lgtm/grade/javascript/g/grantila/opps.svg?logo=lgtm&logoWidth=18
+[lgtm-url]: https://lgtm.com/projects/g/grantila/opps/context:javascript

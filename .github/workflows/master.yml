@@ -17,17 +17,17 @@ jobs:
         node-version:
           - 10.x
           - 12.x
-          - 13.x
           - 14.x
+          - 15.x
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i
-    - run: npm run build
-    - run: npm run test
+    - run: yarn
+    - run: yarn build
+    - run: yarn test
       env:
         CI: true
 
@@ -42,9 +42,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm i
-      - run: npm run build
-      - run: npm run test --coverage
+      - run: yarn
+      - run: yarn build
+      - run: yarn test
         env:
           CI: true
       - name: Coveralls

@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`help groups show group colors 1`] = `
+Array [
+  "  ",
+  "   Usage: [options]",
+  "  ",
+  "   Options:",
+  "  ",
+  "   -h, --help     Print (this) help screen",
+  "   --foo <foo>                            ",
+  "   [0m[42mAt the bar                             [49m[0m",
+  "   [0m[42m  --(no-)bar   #SDT                    [49m[0m",
+  "   [0m[42m  --baz <baz>  Misspled                [49m[0m",
+  "   [0m[45mAt the zoo                             [49m[0m",
+  "   [0m[45m  --(no-)zoo   Animals                 [49m[0m",
+  "   [0m[45m  --zoe <zoe>  Her name                [49m[0m",
+  "",
+]
+`;

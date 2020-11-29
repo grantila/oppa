@@ -6,7 +6,10 @@ function mockConsoleLog( )
 	const oldLog = console.log;
 
 	const lines = [ ];
-	console.log = ( ...args ) => lines.push( args.join( ' ' ) );
+	console.log = ( ...args ) =>
+	{
+		lines.push( ...args.join( ' ' ).split( "\n" ) );
+	};
 
 	return {
 		lines,
@@ -627,6 +630,51 @@ describe( 'help', ( ) =>
 		const helpLine = lines.filter( line => /Usage: foo bar/.test( line ) );
 
 		expect( helpLine.length ).toBe( 1 );
+	} );
+
+	it( 'should print custom argumentName if provided', ( ) =>
+	{
+		const { lines, cleanup } = mockConsoleLog( );
+
+		oppa( )
+			.add( {
+				type: 'string',
+				name: "foo",
+				argumentName: "bar",
+			} )
+			.showHelp( );
+
+		cleanup( );
+
+		const helpLine = lines
+			.filter( line => /--foo/.test( line ) )
+			[ 0 ];
+
+		expect( helpLine.trim( ) ).toBe( "--foo <bar>" );
+	} );
+
+	describe( 'groups', ( ) =>
+	{
+		it( 'show group colors', ( ) =>
+		{
+			const { lines, cleanup } = mockConsoleLog( );
+
+			const opts =
+				oppa( )
+				.add( { name: 'foo', type: 'number' } )
+				.group( { name: "At the bar", backgroundColor: 'green' } )
+				.add( { name: 'bar', type: 'boolean', description: "#SDT" } )
+				.add( { name: 'baz', type: 'string', description: "Misspled" } )
+				.group( { name: "At the zoo", backgroundColor: 'purple' } )
+				.add( { name: 'zoo', type: 'boolean', description: "Animals" } )
+				.add( { name: 'zoe', type: 'string', description: "Her name" } );
+
+			const result = opts.showHelp( );
+
+			cleanup( );
+
+			expect( lines ).toMatchSnapshot( );
+		} );
 	} );
 } );
 
