@@ -413,7 +413,9 @@ export class Oppa< U >
 		}
 	}
 
-	showVersion( exit = false ): void
+	showVersion< Exit extends boolean >( exit: Exit = false as Exit )
+	// @ts-ignore
+	: Exit extends true ? never : void
 	{
 		const prefix = this.opts.name ? this.opts.name + " " : "";
 
@@ -423,7 +425,9 @@ export class Oppa< U >
 			process.exit( 0 );
 	}
 
-	showHelp( exit = false ): void
+	showHelp< Exit extends boolean >( exit: Exit = false as Exit )
+	// @ts-ignore
+	: Exit extends true ? never : void
 	{
 		const line = ( ...texts: Array< string > ) =>
 			console.log( "  ", ...texts );
