@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
 		"declaration": true,
-		"lib": [ "es2015", "es2017" ],
+		"lib": [ "ES2017" ],
 		"types": [ "jest", "node" ],
 		"noEmit": true,
 		"module": "CommonJS",
-		"target": "ES2015"
+		"target": "ES2017"
 	},
 	"include": [
 		"index.ts",
